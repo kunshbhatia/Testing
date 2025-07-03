@@ -1,0 +1,5 @@
+pandas
+numpy
+seaborn
+matplotlib
+-e . # It triggers the setup.py to run
