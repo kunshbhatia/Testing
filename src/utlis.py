@@ -8,6 +8,7 @@ from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 import pickle
 from sklearn.metrics import r2_score
+from sklearn.model_selection import GridSearchCV
 
 def save_object(filepath,obj):
     try:
@@ -19,13 +20,23 @@ def save_object(filepath,obj):
     except Exception as e:
         raise CustomException(e,sys)
 
-def evaluate_model(X_train,X_test,Y_train,Y_test,models):
+def evaluate_model(X_train,X_test,Y_train,Y_test,models,params):
 
     report = {}
     for i in range(len(list(models))):
         model = list(models.values())[i]
-        model.fit(X_train,Y_train)
-        Y_test_predict = model.predict(X_test)
+    
+    preprocessing = [
+        (model_name, models[model_name], params[model_name])
+        for model_name in models
+    ]
+
+    for name,mod,param in preprocessing:
+        gs = GridSearchCV(estimator=mod,param_grid=param,n_jobs=-1,cv=3)
+        gs.fit(X_train,Y_train)
+        best_model = gs.best_estimator_
+
+        Y_test_predict = best_model.predict(X_test)
 
         test_score = r2_score(Y_test,Y_test_predict)
 
