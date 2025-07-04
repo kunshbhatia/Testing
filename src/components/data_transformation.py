@@ -87,11 +87,16 @@ class DataTransformation:
             )
 
             logging.info("Object Saved To File Path")
+
+            train_data_array = np.c_[X_train_transformed,pd.Series(y_train)]
+            test_data_array = np.c_[X_test_transformed,pd.Series(y_test)]
+
+            processor_path = self.data_transfer_config.preprocessor_path
             
             return (
-                np.c_[X_train_transformed, pd.Series(y_train)],
-                np.c_[X_test_transformed, pd.Series(y_test)],
-                self.data_transfer_config.preprocessor_path 
+                train_data_array,
+                test_data_array,
+                processor_path
             )
         except Exception as e:
             raise CustomException(e)

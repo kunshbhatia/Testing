@@ -7,10 +7,10 @@ class CustomException(Exception): # Build in Exception class is used and CustomE
     def __init__(self,error):
         trace = traceback.extract_tb(sys.exc_info()[2])
         for log in trace:
-            logging.error(f"For the file {log.filename} , in the line {log.lineno} , the error is {log.line}")
+            logging.error(f"For the file {log.filename} , in the line {log.lineno} , the error is {error}")
         # exc_info --> Helps in getting the tuple with error,line no and Traceback ( Therefore [2])
-        filename = trace.filename
-        lineno = trace.lineno
+        filename = log.filename
+        lineno = log.lineno
         self.message = f"Error occured in the script {filename} , line {lineno} , message : {str(error)}"
 
         logging.error(self.message)

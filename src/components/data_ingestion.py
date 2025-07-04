@@ -7,6 +7,8 @@ from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 from src.components.data_transformation import DataTransformation
 from src.components.data_transformation import DataTransferConfig
+from src.components.model_trainer import ModelTrainerConfig
+from src.components.model_trainer import ModelTraining
 
 @dataclass # This decorator helps in bypassing the __init__ inside the class to define any variable
 class DataIngestionConfig: # Creation of the paths for the data present
@@ -23,7 +25,7 @@ class DataIngestion:
         try:
             df = pd.read_csv("data.csv")
 
-            os.makedirs(os.path.dirname(self.ingestion_config.train_data_path),exist_ok=True)
+            os.makedirs(os.path.dirname(self.ingestion_config.train_data_path),exist_ok=True) # If folder does't exits , helps in making the folder
             df.to_csv(self.ingestion_config.raw_data_path,index=False,header=True)
 
             logging.info('Train Test Started')
@@ -47,4 +49,6 @@ if __name__=="__main__":
     obj=DataIngestion() 
     train_path,test_path=obj.initate_data_ingestion()
     data_transformation = DataTransformation()
-    data_transformation.transform_data(train_path,test_path)
+    train_data_av , test_data_av,_ = data_transformation.transform_data(train_path,test_path)
+    model_train = ModelTraining()
+    model_train.initiate_model_training(train_data_av,test_data_av)
