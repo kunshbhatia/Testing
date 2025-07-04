@@ -5,8 +5,10 @@ from src.logger import logging
 from src.exception import CustomException
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
+from src.components.data_transformation import DataTransformation
+from src.components.data_transformation import DataTransferConfig
 
-@dataclass
+@dataclass # This decorator helps in bypassing the __init__ inside the class to define any variable
 class DataIngestionConfig: # Creation of the paths for the data present
     train_data_path = os.path.join("artifacts","train.csv")
     test_data_path = os.path.join("artifacts","test.csv")
@@ -16,7 +18,7 @@ class DataIngestion:
     def __init__(self): # helps in getting the access to that train ,test and raw data file paths
         self.ingestion_config = DataIngestionConfig()
 
-    def initate_data_ingestion(self):  # creates train , test and raw data into the file paths mentioned above
+    def initate_data_ingestion(self):  # creates train , test and raw data into the file pats mentioned
         logging.info("Data Entery Method Has Been Started")
         try:
             df = pd.read_csv("data.csv")
@@ -39,9 +41,10 @@ class DataIngestion:
             )
         
         except Exception as e:
-            raise CustomException(e)
+            raise CustomException(e,sys)
         
 if __name__=="__main__":
-    obj=DataIngestion()
-    train_data,test_data=obj.initate_data_ingestion()
-            
+    obj=DataIngestion() 
+    train_path,test_path=obj.initate_data_ingestion()
+    data_transformation = DataTransformation()
+    data_transformation.transform_data(train_path,test_path)

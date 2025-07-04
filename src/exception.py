@@ -5,7 +5,9 @@ from src.logger import logging #Extrats the logging info we need to save in the 
 
 class CustomException(Exception): # Build in Exception class is used and CustomException is the chlid class
     def __init__(self,error):
-        trace = traceback.extract_tb(sys.exc_info()[2])[-1]
+        trace = traceback.extract_tb(sys.exc_info()[2])
+        for log in trace:
+            logging.error(f"For the file {log.filename} , in the line {log.lineno} , the error is {log.line}")
         # exc_info --> Helps in getting the tuple with error,line no and Traceback ( Therefore [2])
         filename = trace.filename
         lineno = trace.lineno
